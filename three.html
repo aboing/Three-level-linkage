@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<select id="province">
+    <option value="">--请选择省份--</option>
+</select>
+<select id="city">
+    <option value="">--请选择市--</option>
+</select>
+<select id="town">
+    <option value="">--请选择县区--</option>
+</select>
+</body>
+<script src="jquery.js"></script>
+<script>
+    $.ajax({
+        url: "http://api.jisuapi.com/area/province?appkey=64d34678fd2d81e2",
+        dataType: "jsonp",
+        success: function (r) {
+            var data=r.result;
+            var str="<option value=0>--请选择省份--</option>";
+            $.each(data,function(index,val){
+                str+="<option value="+val.id+">"+val.name+"</option>";
+            });
+            $("#province").html(str);
+        }
+    });
+    $("#province").change(function(){
+        var val=$(this).val();
+        if(val==0)return;
+        $.ajax({
+            url:"http://api.jisuapi.com/area/city?parentid="+val+"&appkey=64d34678fd2d81e2",
+            dataType:"jsonp",
+            success:function(r){
+                var data=r.result;
+                var str="<option value=0>--请选择市--</option>";
+                $.each(data,function(index,val){
+                    str+="<option value="+val.id+">"+val.name+"</option>";
+                });
+                $("#city").html(str);
+            }
+        });
+    });
+    $("#city").change(function(){
+        var val=$(this).val();
+        if(val==0)return;
+        $.ajax({
+            url:"http://api.jisuapi.com/area/city?parentid="+val+"&appkey=64d34678fd2d81e2",
+            dataType:"jsonp",
+            success:function(r){
+                var data=r.result;
+                var str="<option value=0>--请选择县区--</option>";
+                $.each(data,function(index,val){
+                    str+="<option>"+val.name+"</option>";
+                });
+                $("#town").html(str);
+            }
+        });
+    });
+
+</script>
+</html>
